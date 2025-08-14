@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daftar Mahasiswa</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 40px; }
+    h1 { margin-bottom: 8px; }
+    #status { margin: 10px 0; }
+    table { border-collapse: collapse; width: 420px; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Daftar Mahasiswa</h1>
+  <div id="status">Memuat data...</div>
+  <table id="tbl" style="display:none">
+    <thead><tr><th>ID</th><th>Nama</th><th>Jurusan</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // Ganti setelah API deploy: masukkan URL API Render Anda, contoh:
+    // const API = 'https://nama-api.onrender.com';
+    const API = 'REPLACE_WITH_YOUR_API_URL';
+
+    async function loadStudents() {
+      const status = document.getElementById('status');
+      const tbl = document.getElementById('tbl');
+      try {
+        const res = await fetch(`${API}/students`);
+        const data = await res.json();
+        const tbody = tbl.querySelector('tbody');
+        tbody.innerHTML = '';
+        data.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${r.studentid}</td><td>${r.fullname}</td><td>${r.major}</td>`;
+          tbody.appendChild(tr);
+        });
+        status.textContent = 'Data berhasil dimuat.';
+        tbl.style.display = '';
+      } catch (e) {
+        status.textContent = 'Gagal memuat data. Periksa API_URL dan CORS.';
+      }
+    }
+    loadStudents();
+  </script>
+</body>
+</html>
